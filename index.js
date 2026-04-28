@@ -5,7 +5,7 @@ const TMDB = "https://api.themoviedb.org/3";
 
 const manifest = {
   id: "tr.nuvio.tmdb.katalog",
-  version: "7.0.0",
+  version: "8.0.0",
   name: "🇹🇷 Türkiye Kataloğu",
   description: "TMDB canlı veri — Netflix, Amazon, Disney+, HBO Max, Exxen, Gain, Mubi",
   logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Flag_of_Turkey.svg/320px-Flag_of_Turkey.svg.png",
@@ -50,6 +50,7 @@ const NETWORK = {
   gain:  4585,
 };
 
+// Önbellek
 const cache = {};
 const TTL = 60 * 60 * 1000;
 
@@ -91,132 +92,121 @@ async function toMetas(results, tmdbType) {
   return metas;
 }
 
-// skip değerine göre sayfa hesapla (her sayfa 20 item, skip 0=sayfa1, skip 20=sayfa2...)
-function skipToPage(skip) {
-  return Math.floor((skip || 0) / 20) + 1;
+// skip → TMDB sayfa numarası (her sayfada 20 içerik)
+function page(skip) {
+  return Math.floor((parseInt(skip) || 0) / 20) + 1;
 }
 
-// Çoklu sayfa çek ve birleştir (3 sayfa = 60 içerik)
-async function fetchPages(urlFn, tmdbType, pages = 3) {
-  const all = [];
-  for (let p = 1; p <= pages; p++) {
-    const data = await tmdbGet(urlFn(p));
-    all.push(...(data.results || []));
-  }
-  return toMetas(all, tmdbType);
-}
-
-async function amazonFetch(tmdbType, page = 1) {
-  const base = `?api_key=${TMDB_KEY}&language=tr-TR&region=TR`;
-  const endpoint = tmdbType === "movie" ? "movie" : "tv";
-  const r1 = await tmdbGet(`/discover/${endpoint}${base}&with_watch_providers=${PROVIDER.amazon}&watch_region=TR&sort_by=popularity.desc&page=${page}`);
+// Amazon için her iki ID'yi dene
+async function amazonResults(tmdbType, pg) {
+  const b = `?api_key=${TMDB_KEY}&language=tr-TR&region=TR`;
+  const ep = tmdbType === "movie" ? "movie" : "tv";
+  const r1 = await tmdbGet(`/discover/${ep}${b}&with_watch_providers=${PROVIDER.amazon}&watch_region=TR&sort_by=popularity.desc&page=${pg}`);
   if (r1.results && r1.results.length > 0) return r1.results;
-  const r2 = await tmdbGet(`/discover/${endpoint}${base}&with_watch_providers=${PROVIDER.amazon2}&watch_region=TR&sort_by=popularity.desc&page=${page}`);
+  const r2 = await tmdbGet(`/discover/${ep}${b}&with_watch_providers=${PROVIDER.amazon2}&watch_region=TR&sort_by=popularity.desc&page=${pg}`);
   return r2.results || [];
 }
 
 const base = `?api_key=${TMDB_KEY}&language=tr-TR&region=TR`;
 
 async function fetchCatalog(id, skip) {
-  const page = skipToPage(skip);
+  const pg = page(skip);
 
   switch (id) {
 
     case "tr-pop-film":
-      return toMetas((await tmdbGet(`/movie/popular${base}&page=${page}`)).results, "movie");
+      return toMetas((await tmdbGet(`/movie/popular${base}&page=${pg}`)).results, "movie");
 
     case "tr-pop-dizi":
-      return toMetas((await tmdbGet(`/tv/popular${base}&page=${page}`)).results, "tv");
+      return toMetas((await tmdbGet(`/tv/popular${base}&page=${pg}`)).results, "tv");
 
     case "tr-trend-film":
-      return toMetas((await tmdbGet(`/trending/movie/week${base}&page=${page}`)).results, "movie");
+      return toMetas((await tmdbGet(`/trending/movie/week${base}&page=${pg}`)).results, "movie");
 
     case "tr-trend-dizi":
-      return toMetas((await tmdbGet(`/trending/tv/week${base}&page=${page}`)).results, "tv");
+      return toMetas((await tmdbGet(`/trending/tv/week${base}&page=${pg}`)).results, "tv");
 
-    // Türk dizileri — 3 sayfa çek (60 dizi)
-    case "tr-turk-dizi":
-      return fetchPages(
-        p => `/discover/tv${base}&with_original_language=tr&sort_by=popularity.desc&page=${p}`,
-        "tv", 3
+    case "tr-turk-film":
+      return toMetas(
+        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&sort_by=popularity.desc&page=${pg}`)).results,
+        "movie"
       );
 
-    // Türk filmleri — 3 sayfa çek (60 film)
-    case "tr-turk-film":
-      return fetchPages(
-        p => `/discover/movie${base}&with_original_language=tr&sort_by=popularity.desc&page=${p}`,
-        "movie", 3
+    case "tr-turk-dizi":
+      return toMetas(
+        (await tmdbGet(`/discover/tv${base}&with_original_language=tr&sort_by=popularity.desc&page=${pg}`)).results,
+        "tv"
       );
 
     case "tr-netflix-film":
       return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.netflix}&watch_region=TR&sort_by=popularity.desc&page=${page}`)).results,
+        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.netflix}&watch_region=TR&sort_by=popularity.desc&page=${pg}`)).results,
         "movie"
       );
 
     case "tr-netflix-dizi":
       return toMetas(
-        (await tmdbGet(`/discover/tv${base}&with_watch_providers=${PROVIDER.netflix}&watch_region=TR&sort_by=popularity.desc&page=${page}`)).results,
+        (await tmdbGet(`/discover/tv${base}&with_watch_providers=${PROVIDER.netflix}&watch_region=TR&sort_by=popularity.desc&page=${pg}`)).results,
         "tv"
       );
 
     case "tr-amazon-film":
-      return toMetas(await amazonFetch("movie", page), "movie");
+      return toMetas(await amazonResults("movie", pg), "movie");
 
     case "tr-amazon-dizi":
-      return toMetas(await amazonFetch("tv", page), "tv");
+      return toMetas(await amazonResults("tv", pg), "tv");
 
     case "tr-disney-film":
       return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.disney}&watch_region=TR&sort_by=popularity.desc&page=${page}`)).results,
+        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.disney}&watch_region=TR&sort_by=popularity.desc&page=${pg}`)).results,
         "movie"
       );
 
     case "tr-disney-dizi":
       return toMetas(
-        (await tmdbGet(`/discover/tv${base}&with_watch_providers=${PROVIDER.disney}&watch_region=TR&sort_by=popularity.desc&page=${page}`)).results,
+        (await tmdbGet(`/discover/tv${base}&with_watch_providers=${PROVIDER.disney}&watch_region=TR&sort_by=popularity.desc&page=${pg}`)).results,
         "tv"
       );
 
     case "tr-hbomax-film":
       return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.hbomax}&watch_region=TR&sort_by=popularity.desc&page=${page}`)).results,
+        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.hbomax}&watch_region=TR&sort_by=popularity.desc&page=${pg}`)).results,
         "movie"
       );
 
     case "tr-hbomax-dizi":
       return toMetas(
-        (await tmdbGet(`/discover/tv${base}&with_watch_providers=${PROVIDER.hbomax}&watch_region=TR&sort_by=popularity.desc&page=${page}`)).results,
+        (await tmdbGet(`/discover/tv${base}&with_watch_providers=${PROVIDER.hbomax}&watch_region=TR&sort_by=popularity.desc&page=${pg}`)).results,
         "tv"
       );
 
     case "tr-exxen-dizi":
       return toMetas(
-        (await tmdbGet(`/discover/tv${base}&with_networks=${NETWORK.exxen}&sort_by=popularity.desc&page=${page}`)).results,
+        (await tmdbGet(`/discover/tv${base}&with_networks=${NETWORK.exxen}&sort_by=popularity.desc&page=${pg}`)).results,
         "tv"
       );
 
     case "tr-exxen-film":
       return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&sort_by=popularity.desc&vote_count.gte=50&page=${page}`)).results,
+        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&sort_by=popularity.desc&vote_count.gte=50&page=${pg}`)).results,
         "movie"
       );
 
     case "tr-gain-dizi":
       return toMetas(
-        (await tmdbGet(`/discover/tv${base}&with_networks=${NETWORK.gain}&sort_by=popularity.desc&page=${page}`)).results,
+        (await tmdbGet(`/discover/tv${base}&with_networks=${NETWORK.gain}&sort_by=popularity.desc&page=${pg}`)).results,
         "tv"
       );
 
     case "tr-gain-film":
       return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&sort_by=vote_average.desc&vote_count.gte=100&page=${page}`)).results,
+        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&sort_by=popularity.desc&vote_count.gte=100&page=${pg}`)).results,
         "movie"
       );
 
     case "tr-mubi-film":
       return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.mubi}&watch_region=TR&sort_by=popularity.desc&page=${page}`)).results,
+        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.mubi}&watch_region=TR&sort_by=popularity.desc&page=${pg}`)).results,
         "movie"
       );
 
@@ -229,7 +219,7 @@ const builder = new addonBuilder(manifest);
 
 builder.defineCatalogHandler(async ({ type, id, extra }) => {
   try {
-    const skip = parseInt(extra?.skip || 0);
+    const skip = extra?.skip || 0;
     const metas = await fetchCatalog(id, skip);
     return { metas };
   } catch (err) {
