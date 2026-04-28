@@ -1,0 +1,16 @@
+{
+  "name": "turkiye-nuvio-katalog",
+  "version": "3.0.0",
+  "description": "Türkiye odaklı Nuvio/Stremio katalog eklentisi — TMDB canlı veri",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "stremio-addon-sdk": "^1.6.10",
+    "node-fetch": "^2.7.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
