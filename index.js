@@ -5,7 +5,7 @@ const TMDB = "https://api.themoviedb.org/3";
 
 const manifest = {
   id: "tr.nuvio.tmdb.katalog",
-  version: "6.0.0",
+  version: "7.0.0",
   name: "🇹🇷 Türkiye Kataloğu",
   description: "TMDB canlı veri — Netflix, Amazon, Disney+, HBO Max, Exxen, Gain, Mubi",
   logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Flag_of_Turkey.svg/320px-Flag_of_Turkey.svg.png",
@@ -13,46 +13,43 @@ const manifest = {
   types: ["movie", "series"],
   idPrefixes: ["tt"],
   catalogs: [
-    { id: "tr-pop-film",     type: "movie",  name: "🇹🇷 Türkiye — Popüler Filmler" },
-    { id: "tr-pop-dizi",     type: "series", name: "🇹🇷 Türkiye — Popüler Diziler" },
-    { id: "tr-trend-film",   type: "movie",  name: "🔥 Trend Filmler" },
-    { id: "tr-trend-dizi",   type: "series", name: "🔥 Trend Diziler" },
-    { id: "tr-turk-film",    type: "movie",  name: "🎬 Türk Filmleri" },
-    { id: "tr-turk-dizi",    type: "series", name: "📺 Türk Dizileri" },
-    { id: "tr-netflix-film", type: "movie",  name: "🔴 Netflix TR — Filmler" },
-    { id: "tr-netflix-dizi", type: "series", name: "🔴 Netflix TR — Diziler" },
-    { id: "tr-amazon-film",  type: "movie",  name: "🟠 Amazon Prime TR — Filmler" },
-    { id: "tr-amazon-dizi",  type: "series", name: "🟠 Amazon Prime TR — Diziler" },
-    { id: "tr-disney-film",  type: "movie",  name: "🔵 Disney+ TR — Filmler" },
-    { id: "tr-disney-dizi",  type: "series", name: "🔵 Disney+ TR — Diziler" },
-    { id: "tr-hbomax-film",  type: "movie",  name: "🟣 HBO Max TR — Filmler" },
-    { id: "tr-hbomax-dizi",  type: "series", name: "🟣 HBO Max TR — Diziler" },
-    { id: "tr-exxen-film",   type: "movie",  name: "⚡ Exxen — Filmler" },
-    { id: "tr-exxen-dizi",   type: "series", name: "⚡ Exxen — Diziler" },
-    { id: "tr-gain-film",    type: "movie",  name: "🟢 Gain — Filmler" },
-    { id: "tr-gain-dizi",    type: "series", name: "🟢 Gain — Diziler" },
-    { id: "tr-mubi-film",    type: "movie",  name: "🎞️ Mubi — Filmler" },
+    { id: "tr-pop-film",     type: "movie",  name: "🇹🇷 Türkiye — Popüler Filmler",   extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-pop-dizi",     type: "series", name: "🇹🇷 Türkiye — Popüler Diziler",   extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-trend-film",   type: "movie",  name: "🔥 Trend Filmler",                extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-trend-dizi",   type: "series", name: "🔥 Trend Diziler",                extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-turk-film",    type: "movie",  name: "🎬 Türk Filmleri",                extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-turk-dizi",    type: "series", name: "📺 Türk Dizileri",                extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-netflix-film", type: "movie",  name: "🔴 Netflix TR — Filmler",         extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-netflix-dizi", type: "series", name: "🔴 Netflix TR — Diziler",         extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-amazon-film",  type: "movie",  name: "🟠 Amazon Prime TR — Filmler",    extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-amazon-dizi",  type: "series", name: "🟠 Amazon Prime TR — Diziler",    extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-disney-film",  type: "movie",  name: "🔵 Disney+ TR — Filmler",         extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-disney-dizi",  type: "series", name: "🔵 Disney+ TR — Diziler",         extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-hbomax-film",  type: "movie",  name: "🟣 HBO Max TR — Filmler",         extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-hbomax-dizi",  type: "series", name: "🟣 HBO Max TR — Diziler",         extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-exxen-film",   type: "movie",  name: "⚡ Exxen — Filmler",              extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-exxen-dizi",   type: "series", name: "⚡ Exxen — Diziler",              extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-gain-film",    type: "movie",  name: "🟢 Gain — Filmler",               extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-gain-dizi",    type: "series", name: "🟢 Gain — Diziler",               extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-mubi-film",    type: "movie",  name: "🎞️ Mubi — Filmler",              extra: [{ name: "skip", isRequired: false }] },
   ],
   behaviorHints: { adult: false, p2p: false }
 };
 
-// Watch Provider ID'leri
 const PROVIDER = {
   netflix:  8,
-  amazon:   9,    // Amazon Prime Video
-  amazon2:  119,  // Amazon Prime Video (alternatif)
+  amazon:   9,
+  amazon2:  119,
   disney:   337,
   hbomax:   1899,
   mubi:     11,
 };
 
-// Network ID'leri
 const NETWORK = {
   exxen: 4405,
   gain:  4585,
 };
 
-// Önbellek - 1 saat
 const cache = {};
 const TTL = 60 * 60 * 1000;
 
@@ -74,7 +71,7 @@ async function imdb(tmdbId, type) {
 
 async function toMetas(results, tmdbType) {
   const metas = [];
-  for (const item of (results || []).slice(0, 20)) {
+  for (const item of (results || [])) {
     const imdbId = await imdb(item.id, tmdbType);
     if (!imdbId) continue;
     metas.push({
@@ -94,117 +91,132 @@ async function toMetas(results, tmdbType) {
   return metas;
 }
 
-// Amazon için her iki ID'yi dene, hangisi dolu gelirse onu kullan
-async function amazonFetch(tmdbType) {
+// skip değerine göre sayfa hesapla (her sayfa 20 item, skip 0=sayfa1, skip 20=sayfa2...)
+function skipToPage(skip) {
+  return Math.floor((skip || 0) / 20) + 1;
+}
+
+// Çoklu sayfa çek ve birleştir (3 sayfa = 60 içerik)
+async function fetchPages(urlFn, tmdbType, pages = 3) {
+  const all = [];
+  for (let p = 1; p <= pages; p++) {
+    const data = await tmdbGet(urlFn(p));
+    all.push(...(data.results || []));
+  }
+  return toMetas(all, tmdbType);
+}
+
+async function amazonFetch(tmdbType, page = 1) {
   const base = `?api_key=${TMDB_KEY}&language=tr-TR&region=TR`;
   const endpoint = tmdbType === "movie" ? "movie" : "tv";
-  
-  const r1 = await tmdbGet(`/discover/${endpoint}${base}&with_watch_providers=${PROVIDER.amazon}&watch_region=TR&sort_by=popularity.desc`);
-  if (r1.results && r1.results.length > 0) return toMetas(r1.results, tmdbType);
-  
-  const r2 = await tmdbGet(`/discover/${endpoint}${base}&with_watch_providers=${PROVIDER.amazon2}&watch_region=TR&sort_by=popularity.desc`);
-  return toMetas(r2.results || [], tmdbType);
+  const r1 = await tmdbGet(`/discover/${endpoint}${base}&with_watch_providers=${PROVIDER.amazon}&watch_region=TR&sort_by=popularity.desc&page=${page}`);
+  if (r1.results && r1.results.length > 0) return r1.results;
+  const r2 = await tmdbGet(`/discover/${endpoint}${base}&with_watch_providers=${PROVIDER.amazon2}&watch_region=TR&sort_by=popularity.desc&page=${page}`);
+  return r2.results || [];
 }
 
 const base = `?api_key=${TMDB_KEY}&language=tr-TR&region=TR`;
 
-async function fetchCatalog(id) {
+async function fetchCatalog(id, skip) {
+  const page = skipToPage(skip);
+
   switch (id) {
 
     case "tr-pop-film":
-      return toMetas((await tmdbGet(`/movie/popular${base}`)).results, "movie");
+      return toMetas((await tmdbGet(`/movie/popular${base}&page=${page}`)).results, "movie");
 
     case "tr-pop-dizi":
-      return toMetas((await tmdbGet(`/tv/popular${base}`)).results, "tv");
+      return toMetas((await tmdbGet(`/tv/popular${base}&page=${page}`)).results, "tv");
 
     case "tr-trend-film":
-      return toMetas((await tmdbGet(`/trending/movie/week${base}`)).results, "movie");
+      return toMetas((await tmdbGet(`/trending/movie/week${base}&page=${page}`)).results, "movie");
 
     case "tr-trend-dizi":
-      return toMetas((await tmdbGet(`/trending/tv/week${base}`)).results, "tv");
+      return toMetas((await tmdbGet(`/trending/tv/week${base}&page=${page}`)).results, "tv");
 
-    case "tr-turk-film":
-      return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&sort_by=popularity.desc`)).results,
-        "movie"
+    // Türk dizileri — 3 sayfa çek (60 dizi)
+    case "tr-turk-dizi":
+      return fetchPages(
+        p => `/discover/tv${base}&with_original_language=tr&sort_by=popularity.desc&page=${p}`,
+        "tv", 3
       );
 
-    case "tr-turk-dizi":
-      return toMetas(
-        (await tmdbGet(`/discover/tv${base}&with_original_language=tr&sort_by=popularity.desc`)).results,
-        "tv"
+    // Türk filmleri — 3 sayfa çek (60 film)
+    case "tr-turk-film":
+      return fetchPages(
+        p => `/discover/movie${base}&with_original_language=tr&sort_by=popularity.desc&page=${p}`,
+        "movie", 3
       );
 
     case "tr-netflix-film":
       return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.netflix}&watch_region=TR&sort_by=popularity.desc`)).results,
+        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.netflix}&watch_region=TR&sort_by=popularity.desc&page=${page}`)).results,
         "movie"
       );
 
     case "tr-netflix-dizi":
       return toMetas(
-        (await tmdbGet(`/discover/tv${base}&with_watch_providers=${PROVIDER.netflix}&watch_region=TR&sort_by=popularity.desc`)).results,
+        (await tmdbGet(`/discover/tv${base}&with_watch_providers=${PROVIDER.netflix}&watch_region=TR&sort_by=popularity.desc&page=${page}`)).results,
         "tv"
       );
 
-    // Amazon — her iki ID'yi dene
     case "tr-amazon-film":
-      return amazonFetch("movie");
+      return toMetas(await amazonFetch("movie", page), "movie");
 
     case "tr-amazon-dizi":
-      return amazonFetch("tv");
+      return toMetas(await amazonFetch("tv", page), "tv");
 
     case "tr-disney-film":
       return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.disney}&watch_region=TR&sort_by=popularity.desc`)).results,
+        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.disney}&watch_region=TR&sort_by=popularity.desc&page=${page}`)).results,
         "movie"
       );
 
     case "tr-disney-dizi":
       return toMetas(
-        (await tmdbGet(`/discover/tv${base}&with_watch_providers=${PROVIDER.disney}&watch_region=TR&sort_by=popularity.desc`)).results,
+        (await tmdbGet(`/discover/tv${base}&with_watch_providers=${PROVIDER.disney}&watch_region=TR&sort_by=popularity.desc&page=${page}`)).results,
         "tv"
       );
 
     case "tr-hbomax-film":
       return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.hbomax}&watch_region=TR&sort_by=popularity.desc`)).results,
+        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.hbomax}&watch_region=TR&sort_by=popularity.desc&page=${page}`)).results,
         "movie"
       );
 
     case "tr-hbomax-dizi":
       return toMetas(
-        (await tmdbGet(`/discover/tv${base}&with_watch_providers=${PROVIDER.hbomax}&watch_region=TR&sort_by=popularity.desc`)).results,
+        (await tmdbGet(`/discover/tv${base}&with_watch_providers=${PROVIDER.hbomax}&watch_region=TR&sort_by=popularity.desc&page=${page}`)).results,
         "tv"
       );
 
     case "tr-exxen-dizi":
       return toMetas(
-        (await tmdbGet(`/discover/tv${base}&with_networks=${NETWORK.exxen}&sort_by=popularity.desc`)).results,
+        (await tmdbGet(`/discover/tv${base}&with_networks=${NETWORK.exxen}&sort_by=popularity.desc&page=${page}`)).results,
         "tv"
       );
 
     case "tr-exxen-film":
       return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&sort_by=popularity.desc&vote_count.gte=50`)).results,
+        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&sort_by=popularity.desc&vote_count.gte=50&page=${page}`)).results,
         "movie"
       );
 
     case "tr-gain-dizi":
       return toMetas(
-        (await tmdbGet(`/discover/tv${base}&with_networks=${NETWORK.gain}&sort_by=popularity.desc`)).results,
+        (await tmdbGet(`/discover/tv${base}&with_networks=${NETWORK.gain}&sort_by=popularity.desc&page=${page}`)).results,
         "tv"
       );
 
     case "tr-gain-film":
       return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&sort_by=vote_average.desc&vote_count.gte=100`)).results,
+        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&sort_by=vote_average.desc&vote_count.gte=100&page=${page}`)).results,
         "movie"
       );
 
     case "tr-mubi-film":
       return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.mubi}&watch_region=TR&sort_by=popularity.desc`)).results,
+        (await tmdbGet(`/discover/movie${base}&with_watch_providers=${PROVIDER.mubi}&watch_region=TR&sort_by=popularity.desc&page=${page}`)).results,
         "movie"
       );
 
@@ -215,9 +227,10 @@ async function fetchCatalog(id) {
 
 const builder = new addonBuilder(manifest);
 
-builder.defineCatalogHandler(async ({ type, id }) => {
+builder.defineCatalogHandler(async ({ type, id, extra }) => {
   try {
-    const metas = await fetchCatalog(id);
+    const skip = parseInt(extra?.skip || 0);
+    const metas = await fetchCatalog(id, skip);
     return { metas };
   } catch (err) {
     console.error("Hata:", id, err.message);
