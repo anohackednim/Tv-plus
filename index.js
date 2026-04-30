@@ -193,12 +193,14 @@ async function fetchCatalog(id, skip) {
 
     // ── TÜRK YAPIMLAR ──
     case "tr-turk-film":
+      // 35=Komedi, 18=Drama, 10749=Romantik, 10751=Aile — karışık, popülerlik sırasına göre, sonsuz scroll
       return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&sort_by=popularity.desc&page=${pg}`)).results,
+        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&with_genres=35,18,10749,10751&sort_by=popularity.desc&page=${pg}`)).results,
         "movie"
       );
 
     case "tr-turk-dizi":
+      // Tüm türler, popülerlik sırasına göre, sonsuz scroll
       return toMetas(
         (await tmdbGet(`/discover/tv${base}&with_original_language=tr&sort_by=popularity.desc&page=${pg}`)).results,
         "tv"
