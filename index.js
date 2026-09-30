@@ -13,21 +13,15 @@ const manifest = {
   types: ["movie", "series"],
   idPrefixes: ["tt"],
   catalogs: [
-    // ── GÜNCEL ──
-    { id: "tr-bugun-trend",   type: "movie",  name: "🔥 Bugünün Trendleri — Filmler",      extra: [{ name: "skip", isRequired: false }] },
-    { id: "tr-bugun-trend-d", type: "series", name: "🔥 Bugünün Trendleri — Diziler",      extra: [{ name: "skip", isRequired: false }] },
-    { id: "tr-bu-hafta-film", type: "movie",  name: "🆕 Bu Hafta Çıkanlar — Filmler",      extra: [{ name: "skip", isRequired: false }] },
-    { id: "tr-bu-hafta-dizi", type: "series", name: "🆕 Bu Hafta Çıkanlar — Diziler",      extra: [{ name: "skip", isRequired: false }] },
-
-    // ── TÜRKİYE GENEL ──
-    { id: "tr-pop-film",      type: "movie",  name: "🇹🇷 Türkiye — Popüler Filmler",       extra: [{ name: "skip", isRequired: false }] },
-    { id: "tr-pop-dizi",      type: "series", name: "🇹🇷 Türkiye — Popüler Diziler",       extra: [{ name: "skip", isRequired: false }] },
-    { id: "tr-trend-film",    type: "movie",  name: "📈 Trend Filmler",                    extra: [{ name: "skip", isRequired: false }] },
-    { id: "tr-trend-dizi",    type: "series", name: "📈 Trend Diziler",                    extra: [{ name: "skip", isRequired: false }] },
+    // ── KEŞFET ──
+    { id: "tr-bu-hafta-film", type: "movie",  name: "🆕 Yeni Filmler",                      extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-bu-hafta-dizi", type: "series", name: "🆕 Yeni Diziler",                      extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-trend-film",    type: "movie",  name: "📈 Şu An Popüler Filmler",             extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-trend-dizi",    type: "series", name: "📈 Şu An Popüler Diziler",             extra: [{ name: "skip", isRequired: false }] },
 
     // ── TÜRK YAPIMLAR ──
-    { id: "tr-turk-film",     type: "movie",  name: "🎬 Türk Filmleri",                    extra: [{ name: "skip", isRequired: false }] },
-    { id: "tr-turk-dizi",     type: "series", name: "📺 Türk Dizileri",                    extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-turk-film",     type: "movie",  name: "🇹🇷 Türk Filmleri",                    extra: [{ name: "skip", isRequired: false }] },
+    { id: "tr-turk-dizi",     type: "series", name: "🇹🇷 Türk Dizileri",                    extra: [{ name: "skip", isRequired: false }] },
 
     // ── YÜKSEK PUANLI ──
     { id: "tr-imdb-film",     type: "movie",  name: "⭐ Yüksek Puanlı Filmler (IMDB 7.5+)", extra: [{ name: "skip", isRequired: false }] },
@@ -54,9 +48,7 @@ const manifest = {
     { id: "tr-disney-dizi",   type: "series", name: "🔵 Disney+ TR — Diziler",             extra: [{ name: "skip", isRequired: false }] },
     { id: "tr-hbomax-film",   type: "movie",  name: "🟣 HBO Max TR — Filmler",             extra: [{ name: "skip", isRequired: false }] },
     { id: "tr-hbomax-dizi",   type: "series", name: "🟣 HBO Max TR — Diziler",             extra: [{ name: "skip", isRequired: false }] },
-    { id: "tr-exxen-film",    type: "movie",  name: "⚡ Exxen — Filmler",                  extra: [{ name: "skip", isRequired: false }] },
     { id: "tr-exxen-dizi",    type: "series", name: "⚡ Exxen — Diziler",                  extra: [{ name: "skip", isRequired: false }] },
-    { id: "tr-gain-film",     type: "movie",  name: "🟢 Gain — Filmler",                   extra: [{ name: "skip", isRequired: false }] },
     { id: "tr-gain-dizi",     type: "series", name: "🟢 Gain — Diziler",                   extra: [{ name: "skip", isRequired: false }] },
     { id: "tr-mubi-film",     type: "movie",  name: "🎞️ Mubi — Filmler",                  extra: [{ name: "skip", isRequired: false }] },
   ],
@@ -157,13 +149,6 @@ async function fetchCatalog(id, skip) {
 
   switch (id) {
 
-    // ── BUGÜNÜN TRENDLERİ (günlük) ──
-    case "tr-bugun-trend":
-      return toMetas((await tmdbGet(`/trending/movie/day${base}&page=${pg}`)).results, "movie");
-
-    case "tr-bugun-trend-d":
-      return toMetas((await tmdbGet(`/trending/tv/day${base}&page=${pg}`)).results, "tv");
-
     // ── BU HAFTA ÇIKANLAR ──
     case "tr-bu-hafta-film":
       return toMetas(
@@ -177,13 +162,6 @@ async function fetchCatalog(id, skip) {
         "tv"
       );
 
-    // ── TÜRKİYE POPÜLER ──
-    case "tr-pop-film":
-      return toMetas((await tmdbGet(`/movie/popular${base}&page=${pg}`)).results, "movie");
-
-    case "tr-pop-dizi":
-      return toMetas((await tmdbGet(`/tv/popular${base}&page=${pg}`)).results, "tv");
-
     // ── TREND ──
     case "tr-trend-film":
       return toMetas((await tmdbGet(`/trending/movie/week${base}&page=${pg}`)).results, "movie");
@@ -193,9 +171,9 @@ async function fetchCatalog(id, skip) {
 
     // ── TÜRK YAPIMLAR ──
     case "tr-turk-film":
-      // 35=Komedi, 18=Drama, 10749=Romantik, 10751=Aile — karışık, popülerlik sırasına göre, sonsuz scroll
+      // Tüm türler dahil; popülerlik sırasına göre, sonsuz scroll
       return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&with_genres=35,18,10749,10751&sort_by=popularity.desc&page=${pg}`)).results,
+        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&sort_by=popularity.desc&page=${pg}`)).results,
         "movie"
       );
 
@@ -333,22 +311,10 @@ async function fetchCatalog(id, skip) {
         "tv"
       );
 
-    case "tr-exxen-film":
-      return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&sort_by=popularity.desc&vote_count.gte=50&page=${pg}`)).results,
-        "movie"
-      );
-
     case "tr-gain-dizi":
       return toMetas(
         (await tmdbGet(`/discover/tv${base}&with_networks=${NETWORK.gain}&sort_by=popularity.desc&page=${pg}`)).results,
         "tv"
-      );
-
-    case "tr-gain-film":
-      return toMetas(
-        (await tmdbGet(`/discover/movie${base}&with_original_language=tr&sort_by=popularity.desc&vote_count.gte=100&page=${pg}`)).results,
-        "movie"
       );
 
     case "tr-mubi-film":
