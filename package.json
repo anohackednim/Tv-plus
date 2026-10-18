@@ -1,16 +1,14 @@
 {
   "name": "turkiye-nuvio-katalog",
-  "version": "3.0.0",
-  "description": "Türkiye odaklı Nuvio/Stremio katalog eklentisi — TMDB canlı veri",
+  "version": "12.0.0",
+  "description": "TV+ Keşif — Nuvio için Türkçe film ve dizi keşfi",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
-  },
-  "dependencies": {
-    "stremio-addon-sdk": "^1.6.10",
-    "node-fetch": "^2.7.0"
+    "start": "node index.js",
+    "test": "node --test",
+    "check": "node --check index.js && node --check catalog.js && node --check server.js"
   },
   "engines": {
-    "node": ">=18"
+    "node": "22.x"
   }
 }
