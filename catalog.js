@@ -29,11 +29,15 @@ for (const [slug, title, provider] of PROVIDERS) {
   }
 }
 for (const [slug, title, network] of [['exxen', 'Exxen', 4405], ['gain', 'GAİN', 4409], ['tabii', 'tabii', 6854]]) add(`tr-${slug}-dizi`, 'series', `${title} Orijinalleri`, 'discover', { with_networks: network, sort_by: 'popularity.desc' }, true);
-for (const [slug, title, provider] of [['puhu', 'puhutv', 342], ['crunchy', 'Crunchyroll', 283]]) add(`tr-${slug}-dizi`, 'series', title, 'discover', { with_watch_providers: provider, watch_region: 'TR', with_watch_monetization_types: 'flatrate|free|ads', sort_by: 'popularity.desc' }, true);
+for (const [slug, title, provider] of [['puhu', 'puhutv', 342]]) add(`tr-${slug}-dizi`, 'series', title, 'discover', { with_watch_providers: provider, watch_region: 'TR', with_watch_monetization_types: 'flatrate|free|ads', sort_by: 'popularity.desc' }, true);
 add('tr-tur-film', 'movie', 'Ruh Haline Göre · Filmler', 'discover', { 'vote_count.gte': 100, sort_by: 'popularity.desc' }, true);
 add('tr-tur-dizi', 'series', 'Ruh Haline Göre · Diziler', 'discover', { 'vote_count.gte': 50, sort_by: 'popularity.desc' }, true);
 add('tr-search-film', 'movie', 'Film Ara', 'search');
 add('tr-search-dizi', 'series', 'Dizi Ara', 'search');
+
+// Nuvio persists user order using addon/type/catalog IDs. A one-time generation
+// change makes its stale v11/v12 keys inapplicable, restoring manifest order.
+const published = definitions.map((def, index) => ({ ...def, id: `tvp13-${String(index + 1).padStart(2, '0')}-${def.id}` }));
 
 // Old installed manifests can still request these IDs after upgrading.
 const aliases = {};
@@ -44,10 +48,10 @@ aliases['tr-blutv-dizi'] = definitions.find(d => d.id === 'tr-hbomax-dizi');
 
 function createCatalogService({ apiKey, fetcher = fetch, now = () => new Date(), requestTimeoutMs = 20000 } = {}) {
   const manifest = {
-    id: 'tr.nuvio.tmdb.katalog', version: '12.0.0', name: 'TV+ Keşif',
+    id: 'tr.nuvio.tmdb.katalog', version: '13.0.0', name: 'TV+ Keşif',
     description: 'Ne izlesem? Bu haftanın öne çıkanları, yeni filmler ve diziler, Türk yapımları ve Türkiye platform katalogları. Türkçe bilgiler, IMDb kimlikleri.',
     logo: 'https://tv-plus-wine.vercel.app/logo.svg', resources: ['catalog'], types: ['movie', 'series'], idPrefixes: ['tt'],
-    catalogs: definitions.map(({ id, type, name, extra }) => ({ id, type, name, extra, pageSize: 20 })),
+    catalogs: published.map(({ id, type, name, extra }) => ({ id, type, name, extra, pageSize: 20 })),
     behaviorHints: { adult: false, p2p: false, configurable: false }
   };
   const cache = new Map(), pending = new Map(), lists = new Map();
@@ -126,7 +130,7 @@ function createCatalogService({ apiKey, fetcher = fetch, now = () => new Date(),
     };
   }
   async function catalog(type, id, extras = {}) {
-    const def = definitions.find(d => d.id === id) || aliases[id];
+    const def = published.find(d => d.id === id) || definitions.find(d => d.id === id) || aliases[id];
     const skip = Number(extras.skip || 0);
     if (!def || def.type !== type || !Number.isInteger(skip) || skip < 0 || skip >= MAX_RESULTS) return { metas: [] };
     if (def.mode === 'search' && !extras.search?.trim()) return { metas: [] };

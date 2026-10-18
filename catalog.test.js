@@ -19,7 +19,7 @@ function setup(options = {}) {
 test('keeps the installed addon identity and places discovery before platforms', () => {
   const { service } = setup();
   assert.equal(service.manifest.id, 'tr.nuvio.tmdb.katalog');
-  assert.equal(service.manifest.catalogs[0].id, 'tr-trend-film');
+  assert.equal(service.manifest.catalogs[0].id, 'tvp13-01-tr-trend-film');
   assert.ok(service.manifest.catalogs.some(c => c.extra.some(e => e.name === 'genre')));
 });
 test('does not label TMDB scores as IMDb ratings', async () => {
@@ -41,8 +41,21 @@ test('local originals use verified networks rather than incomplete availability 
     const { service, calls } = setup();
     await service.catalog('series', id, {});
     assert.equal(calls[0].searchParams.get('with_networks'), String(network));
-    assert.match(service.manifest.catalogs.find(c => c.id === id).name, /Orijinalleri/);
+    assert.match(service.manifest.catalogs.find(c => c.id.endsWith(id)).name, /Orijinalleri/);
   }
+});
+test('new catalog keys bypass saved legacy ordering and remove Crunchyroll entirely', async () => {
+  const { service, calls } = setup();
+  const catalogs = service.manifest.catalogs;
+  const names = ['Bu Hafta · Filmler','Bu Hafta · Diziler','Yeni Çıkan · Filmler','Yeni Çıkan · Diziler','Türk Filmleri','Türk Dizileri','İyi ki İzlemişim · Sinema','Bir Bölüm Daha · Diziler','Gözden Kaçan · Filmler','Gözden Kaçan · Diziler','Netflix · Filmler','Netflix · Diziler','Prime Video · Filmler','Prime Video · Diziler','Disney+ · Filmler','Disney+ · Diziler','HBO Max · Filmler','HBO Max · Diziler','TV+ · Filmler','TV+ · Diziler','TOD · Filmler','TOD · Diziler','MUBI · Filmler','Exxen Orijinalleri','GAİN Orijinalleri','tabii Orijinalleri','puhutv','Ruh Haline Göre · Filmler','Ruh Haline Göre · Diziler','Film Ara','Dizi Ara'];
+  assert.deepEqual(catalogs.map(c => c.name), names);
+  assert.ok(catalogs.every(c => c.id.startsWith('tvp13-')));
+  const savedOldOrder = ['tr-netflix-film', 'tr-turk-dizi', 'tr-crunchy-dizi'];
+  assert.ok(catalogs.every(c => !savedOldOrder.includes(c.id)));
+  assert.deepEqual(await service.catalog('series', 'tr-crunchy-dizi', {}), { metas: [] });
+  assert.equal(calls.length, 0);
+  const first = await service.catalog('movie', catalogs[0].id, {});
+  assert.equal(first.metas.length, 20);
 });
 test('arbitrary offsets do not repeat entries between pages', async () => {
   const { service } = setup();

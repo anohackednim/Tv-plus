@@ -1,6 +1,6 @@
 {
   "name": "turkiye-nuvio-katalog",
-  "version": "12.0.0",
+  "version": "13.0.0",
   "description": "TV+ Keşif — Nuvio için Türkçe film ve dizi keşfi",
   "main": "index.js",
   "scripts": {

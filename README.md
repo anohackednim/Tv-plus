@@ -6,7 +6,7 @@ Nuvio ve Stremio için Türkçe film / dizi kataloğu. Haftanın öne çıkanlar
 
 **Nuvio eklenti adresi:** https://tv-plus-wine.vercel.app/manifest.json
 
-Nuvio'nun Eklentiler bölümünde bu adresi ekleyin. Eski kurulum yeni rafları göstermiyorsa eklentiyi kaldırıp aynı adresle yeniden ekleyin. Mevcut eklenti kimliği korunur; önceki katalog adresleri de yanıt vermeye devam eder.
+Nuvio'nun Eklentiler bölümünde bu adresi ekleyin. v13'e geçerken eski TV+ Keşif eklentisini kaldırıp aynı adresle yeniden ekleyin. Nuvio'nun katalog sıralama ekranında **Eklenti sırasını takip et / Follow addons order** seçeneğini etkinleştirin. Eklenti ana kimliği korunur; raf kimlikleri bir defaya mahsus yenilenerek Nuvio'da kayıtlı eski raf sırası devre dışı kalır. Önceki katalog adresleri Crunchyroll haricinde yanıt vermeye devam eder. Sürüm numarası tek başına Nuvio'nun cihazda veya hesapta sakladığı sırayı değiştirmez.
 
 ## Katalog düzeni
 
@@ -15,7 +15,7 @@ Nuvio'nun Eklentiler bölümünde bu adresi ekleyin. Eski kurulum yeni rafları 
 - Türk Filmleri / Türk Dizileri: orijinal dili Türkçe olan yapımlar.
 - İyi ki İzlemişim / Bir Bölüm Daha: yeterli oy sayısı bulunan yüksek TMDB puanlı yapımlar.
 - Gözden Kaçan: yüksek puan ve sınırlı oy sayısıyla belirlenen keşif rafları; kişisel öneri motoru değildir.
-- Netflix, Prime Video, Disney+, HBO Max, TV+, TOD, MUBI, puhutv ve Crunchyroll: TMDB / JustWatch Türkiye bulunabilirliği; abonelik, ücretsiz ve reklamlı seçenekler. Kiralama / satın alma listeye dahil edilmez.
+- Netflix, Prime Video, Disney+, HBO Max, TV+, TOD, MUBI ve puhutv: TMDB / JustWatch Türkiye bulunabilirliği; abonelik, ücretsiz ve reklamlı seçenekler. Kiralama / satın alma listeye dahil edilmez.
 - Exxen, GAİN ve tabii Orijinalleri: TMDB'deki doğrulanmış yapım ağı bilgilerine göre listelenir; güncel Türkiye bulunabilirliği garantisi değildir.
 - Ruh Haline Göre: tür filtreleriyle film ve dizi keşfi.
 - Film Ara / Dizi Ara: Türkçe karakterleri destekleyen arama.
