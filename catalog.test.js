@@ -19,7 +19,7 @@ function setup(options = {}) {
 test('keeps the installed addon identity and places Turkey discovery before platforms', () => {
   const { service } = setup();
   assert.equal(service.manifest.id, 'tr.nuvio.tmdb.katalog');
-  assert.equal(service.manifest.catalogs[0].id, 'tvp14-01-tr-yeni-film');
+  assert.equal(service.manifest.catalogs[0].id, 'tvp16-01-tr-yeni-film');
   assert.ok(service.manifest.catalogs.some(c => c.extra.some(e => e.name === 'genre')));
 });
 test('does not label TMDB scores as IMDb ratings', async () => {
@@ -47,9 +47,9 @@ test('local originals use verified networks rather than incomplete availability 
 test('new catalog keys bypass saved legacy ordering and remove Crunchyroll entirely', async () => {
   const { service, calls } = setup();
   const catalogs = service.manifest.catalogs;
-  const names = ['Yeni Filmler · Türkiye','Yeni Diziler · Türkiye',"Türkiye'de Öne Çıkan · Filmler","Türkiye'de Öne Çıkan · Diziler",'Türk Filmleri','Türk Dizileri','İyi ki İzlemişim · Sinema','Bir Bölüm Daha · Diziler','Gözden Kaçan · Filmler','Gözden Kaçan · Diziler','Netflix · Filmler','Netflix · Diziler','Prime Video · Filmler','Prime Video · Diziler','Disney+ · Filmler','Disney+ · Diziler','HBO Max · Filmler','HBO Max · Diziler','TV+ · Filmler','TV+ · Diziler','TOD · Filmler','TOD · Diziler','MUBI · Filmler','Exxen Orijinalleri','GAİN Orijinalleri','tabii Orijinalleri','puhutv','Ruh Haline Göre · Filmler','Ruh Haline Göre · Diziler','Film Ara','Dizi Ara'];
+  const names = ['Yeni Filmler · Türkiye','Yeni Diziler · Türkiye',"Türkiye'den Popüler · Filmler","Türkiye'den Popüler · Diziler","Türkiye'de Öne Çıkan · Filmler","Türkiye'de Öne Çıkan · Diziler",'Türk Filmleri','Türk Dizileri','İyi ki İzlemişim · Sinema','Bir Bölüm Daha · Diziler','Gözden Kaçan · Filmler','Gözden Kaçan · Diziler','Netflix · Filmler','Netflix · Diziler','Prime Video · Filmler','Prime Video · Diziler','Disney+ · Filmler','Disney+ · Diziler','HBO Max · Filmler','HBO Max · Diziler','TV+ · Filmler','TV+ · Diziler','TOD · Filmler','TOD · Diziler','MUBI · Filmler','Exxen Orijinalleri','GAİN Orijinalleri','tabii Orijinalleri','puhutv','Ruh Haline Göre · Filmler','Ruh Haline Göre · Diziler','Film Ara','Dizi Ara'];
   assert.deepEqual(catalogs.map(c => c.name), names);
-  assert.ok(catalogs.every(c => c.id.startsWith('tvp14-')));
+  assert.ok(catalogs.every(c => c.id.startsWith('tvp16-')));
   const savedOldOrder = ['tr-netflix-film', 'tr-turk-dizi', 'tr-crunchy-dizi'];
   assert.ok(catalogs.every(c => !savedOldOrder.includes(c.id)));
   assert.deepEqual(await service.catalog('series', 'tr-crunchy-dizi', {}), { metas: [] });

@@ -6,11 +6,12 @@ Nuvio ve Stremio için Türkçe film / dizi kataloğu. Haftanın öne çıkanlar
 
 **Nuvio eklenti adresi:** https://tv-plus-wine.vercel.app/manifest.json
 
-Nuvio'nun Eklentiler bölümünde bu adresi ekleyin. v14'e geçerken eski TV+ Keşif eklentisini kaldırıp aynı adresle yeniden ekleyin. Nuvio'nun katalog sıralama ekranında **Eklenti sırasını takip et / Follow addons order** seçeneğini etkinleştirin. Eklenti ana kimliği korunur; raf kimlikleri bir defaya mahsus yenilenerek Nuvio'da kayıtlı eski raf sırası devre dışı kalır. Önceki katalog adresleri Crunchyroll haricinde yanıt vermeye devam eder. Sürüm numarası tek başına Nuvio'nun cihazda veya hesapta sakladığı sırayı değiştirmez.
+Nuvio'nun Eklentiler bölümünde bu adresi ekleyin. v16'ya geçerken eski TV+ Keşif eklentisini kaldırıp aynı adresle yeniden ekleyin. Nuvio'nun katalog sıralama ekranında **Eklenti sırasını takip et / Follow addons order** seçeneğini etkinleştirin. Eklenti ana kimliği korunur; raf kimlikleri bir defaya mahsus yenilenerek Nuvio'da kayıtlı eski raf sırası devre dışı kalır. Önceki katalog adresleri Crunchyroll haricinde yanıt vermeye devam eder. Sürüm numarası tek başına Nuvio'nun cihazda veya hesapta sakladığı sırayı değiştirmez.
 
 ## Katalog düzeni
 
-- Yeni Filmler / Yeni Diziler · Türkiye: son bir yılda yayımlanan ve Türkiye'de abonelik, ücretsiz veya reklamlı olarak izlenebilen içerikler; yeniden eskiye.
+- Yeni Filmler / Yeni Diziler · Türkiye: son bir yılda yayımlanan ve Türkiye'de abonelik, ücretsiz veya reklamlı olarak izlenebilen içerikler; oy eşiği olmadan yeniden eskiye.
+- Türkiye'den Popüler Filmler / Diziler: TMDB'de yapım ülkesi Türkiye olan popüler başlıklar; az oy alan yeni diziler de bu listede bulunabilir.
 - Türkiye'de Öne Çıkan Filmler / Diziler: Türkiye'de izlenebilir içerikler; popülerliğe göre.
 - Türk Filmleri / Türk Dizileri: orijinal dili Türkçe olan yapımlar.
 - İyi ki İzlemişim / Bir Bölüm Daha: yeterli oy sayısı bulunan yüksek TMDB puanlı yapımlar.

@@ -15,6 +15,9 @@ for (const [suffix, type, noun] of [['film', 'movie', 'Filmler'], ['dizi', 'seri
   add(`tr-yeni-${suffix}`, type, `Yeni ${noun} · Türkiye`, 'latest', { watch_region: 'TR', with_watch_monetization_types: 'flatrate|free|ads' });
 }
 for (const [suffix, type, noun] of [['film', 'movie', 'Filmler'], ['dizi', 'series', 'Diziler']]) {
+  add(`tr-yerli-${suffix}`, type, `Türkiye'den Popüler · ${noun}`, 'discover', { with_origin_country: 'TR', sort_by: 'popularity.desc' });
+}
+for (const [suffix, type, noun] of [['film', 'movie', 'Filmler'], ['dizi', 'series', 'Diziler']]) {
   add(`tr-trend-${suffix}`, type, `Türkiye'de Öne Çıkan · ${noun}`, 'discover', { watch_region: 'TR', with_watch_monetization_types: 'flatrate|free|ads', sort_by: 'popularity.desc' });
 }
 for (const [suffix, type, noun] of [['film', 'movie', 'Filmleri'], ['dizi', 'series', 'Dizileri']]) add(`tr-turk-${suffix}`, type, `Türk ${noun}`, 'discover', { with_original_language: 'tr', sort_by: 'popularity.desc' }, true);
@@ -39,7 +42,7 @@ add('tr-search-dizi', 'series', 'Dizi Ara', 'search');
 
 // Nuvio persists user order using addon/type/catalog IDs. A generation change
 // restores the intended discovery order after this catalog redesign.
-const published = definitions.map((def, index) => ({ ...def, id: `tvp14-${String(index + 1).padStart(2, '0')}-${def.id}` }));
+const published = definitions.map((def, index) => ({ ...def, id: `tvp16-${String(index + 1).padStart(2, '0')}-${def.id}` }));
 
 // Old installed manifests can still request these IDs after upgrading.
 const aliases = {};
@@ -50,8 +53,8 @@ aliases['tr-blutv-dizi'] = definitions.find(d => d.id === 'tr-hbomax-dizi');
 
 function createCatalogService({ apiKey, fetcher = fetch, now = () => new Date(), requestTimeoutMs = 20000 } = {}) {
   const manifest = {
-    id: 'tr.nuvio.tmdb.katalog', version: '14.0.0', name: 'TV+ Keşif',
-    description: 'Türkiye platformlarında yeni çıkan ve öne çıkan filmler ile diziler. Türkçe bilgiler, IMDb kimlikleri.',
+    id: 'tr.nuvio.tmdb.katalog', version: '16.0.0', name: 'TV+ Keşif',
+    description: 'Türkiye platformlarında yeni çıkanlar, popüler yerli yapımlar ve öne çıkan filmler ile diziler. Türkçe bilgiler, IMDb kimlikleri.',
     logo: 'https://tv-plus-wine.vercel.app/logo.svg', resources: ['catalog'], types: ['movie', 'series'], idPrefixes: ['tt'],
     catalogs: published.map(({ id, type, name, extra }) => ({ id, type, name, extra, pageSize: 20 })),
     behaviorHints: { adult: false, p2p: false, configurable: false }
@@ -114,8 +117,8 @@ function createCatalogService({ apiKey, fetcher = fetch, now = () => new Date(),
     if (def.mode === 'latest') {
       const since = new Date(now()); since.setUTCFullYear(since.getUTCFullYear() - 1);
       Object.assign(params, tmdbType === 'movie'
-        ? { sort_by: 'primary_release_date.desc', 'primary_release_date.lte': date, 'primary_release_date.gte': since.toISOString().slice(0, 10), 'vote_count.gte': 30 }
-        : { sort_by: 'first_air_date.desc', 'first_air_date.lte': date, 'first_air_date.gte': since.toISOString().slice(0, 10), 'vote_count.gte': 10 });
+        ? { sort_by: 'primary_release_date.desc', 'primary_release_date.lte': date, 'primary_release_date.gte': since.toISOString().slice(0, 10) }
+        : { sort_by: 'first_air_date.desc', 'first_air_date.lte': date, 'first_air_date.gte': since.toISOString().slice(0, 10) });
     } else if (def.mode === 'discover') params[tmdbType === 'movie' ? 'primary_release_date.lte' : 'first_air_date.lte'] = date;
     if (extras.genre && extras.genre !== 'Tümü') params.with_genres = GENRES[def.type][extras.genre];
     return { path, params, tmdbType };
