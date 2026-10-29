@@ -6,13 +6,11 @@ Nuvio ve Stremio için Türkçe film / dizi kataloğu. Haftanın öne çıkanlar
 
 **Nuvio eklenti adresi:** https://tv-plus-wine.vercel.app/manifest.json
 
-Nuvio'nun Eklentiler bölümünde bu adresi ekleyin. v16'ya geçerken eski TV+ Keşif eklentisini kaldırıp aynı adresle yeniden ekleyin. Nuvio'nun katalog sıralama ekranında **Eklenti sırasını takip et / Follow addons order** seçeneğini etkinleştirin. Eklenti ana kimliği korunur; raf kimlikleri bir defaya mahsus yenilenerek Nuvio'da kayıtlı eski raf sırası devre dışı kalır. Önceki katalog adresleri Crunchyroll haricinde yanıt vermeye devam eder. Sürüm numarası tek başına Nuvio'nun cihazda veya hesapta sakladığı sırayı değiştirmez.
+Nuvio'nun Eklentiler bölümünde bu adresi ekleyin. v17'ye geçerken eski TV+ Keşif eklentisini kaldırıp aynı adresle yeniden ekleyin. Nuvio'nun katalog sıralama ekranında **Eklenti sırasını takip et / Follow addons order** seçeneğini etkinleştirin. Eklenti ana kimliği korunur; raf kimlikleri bir defaya mahsus yenilenerek Nuvio'da kayıtlı eski raf sırası devre dışı kalır. Önceki katalog adresleri Crunchyroll haricinde yanıt vermeye devam eder. Sürüm numarası tek başına Nuvio'nun cihazda veya hesapta sakladığı sırayı değiştirmez.
 
 ## Katalog düzeni
 
-- Yeni Filmler / Yeni Diziler · Türkiye: son bir yılda yayımlanan ve Türkiye'de abonelik, ücretsiz veya reklamlı olarak izlenebilen içerikler; oy eşiği olmadan yeniden eskiye.
-- Türkiye'den Popüler Filmler / Diziler: TMDB'de yapım ülkesi Türkiye olan popüler başlıklar; az oy alan yeni diziler de bu listede bulunabilir.
-- Türkiye'de Öne Çıkan Filmler / Diziler: Türkiye'de izlenebilir içerikler; popülerliğe göre.
+- Türkiye'de Popüler · Filmler / Diziler: Türkiye'de abonelik, ücretsiz veya reklamlı olarak izlenebilen içerikler; çıkış tarihine göre yeniden eskiye. Tarih aralığı ve oy eşiği yoktur; yeni eklenen başlıklar üstte görünür.
 - Türk Filmleri / Türk Dizileri: orijinal dili Türkçe olan yapımlar.
 - İyi ki İzlemişim / Bir Bölüm Daha: yeterli oy sayısı bulunan yüksek TMDB puanlı yapımlar.
 - Gözden Kaçan: yüksek puan ve sınırlı oy sayısıyla belirlenen keşif rafları; kişisel öneri motoru değildir.
@@ -21,7 +19,7 @@ Nuvio'nun Eklentiler bölümünde bu adresi ekleyin. v16'ya geçerken eski TV+ K
 - Ruh Haline Göre: tür filtreleriyle film ve dizi keşfi.
 - Film Ara / Dizi Ara: Türkçe karakterleri destekleyen arama.
 
-Raflar kaydırıldıkça sayfalanır ve TMDB'nin 500 sayfalık sınırına (en fazla yaklaşık 10.000 kaynak sonucu) kadar devam eder; son sayfa daima veri kaynağının sonudur. IMDb kimliği veya afişi olmayan içerikler atlandığı için gösterilen sonuç sayısı daha az olabilir. Çok derin bir konuma doğrudan atlamak, önceki kayıtların sırayla eşlenmesini gerektirir; en iyi deneyim normal kaydırmadır. İstediğiniz belirli bir yapım için aramayı kullanın.
+Raflar kaydırıldıkça sayfalanır ve TMDB'nin 500 sayfalık sınırına (en fazla yaklaşık 10.000 kaynak sonucu) kadar devam eder; son sayfa daima veri kaynağının sonudur. IMDb kimliği veya afişi olmayan içerikler atlandığı için gösterilen sonuç sayısı daha az olabilir. Çok derin bir konuma doğrudan atlamak, önceki kayıtların sırayla eşlenmesini gerektirir; en iyi deneyim normal kaydırmadır. İstediğiniz belirli bir yapım için aramayı kullanın. Katalog ve TMDB yanıtları sunucuda 5 dakika, CDN'de en fazla 1 dakika önbellekte tutulur.
 
 Türkçe özeti olmayan yapımlar için açık bir bilgilendirme gösterilir. IMDb kimliği veya afişi olmayan yapımlar listelenmez; TMDB puanı IMDb puanı olarak etiketlenmez. Platformdaki içerik ve bölge bilgisi sağlayıcının verisinin güncelliğine bağlıdır. Exxen, GAİN ve tabii için bulunabilirlik verisi sınırlı olduğundan bu raflar açıkça Orijinaller olarak adlandırılır. BluTV'nin eski adresi HBO Max rafına yönlenir.
 
@@ -43,7 +41,7 @@ Yerel adres: http://localhost:7777
 
 - `/manifest.json`, `/catalog/:type/:id.json`, `/catalog/:type/:id/:extras.json` uçları.
 - IMDb sorgularında tüm istekler için paylaşılan en fazla 8 eşzamanlı TMDB çağrısı.
-- Aynı API çağrıları birleştirilir; başarılı listeler 30 dakika, IMDb eşlemeleri 24 saat tutulur. Önbellek Vercel örneğine özeldir ve boyutu sınırlıdır.
+- Aynı API çağrıları birleştirilir; başarılı listeler 5 dakika, IMDb eşlemeleri 24 saat tutulur. Önbellek Vercel örneğine özeldir ve boyutu sınırlıdır.
 - Eksik IMDb kimlikleri veya tekrarlı sonuçlar atlandığında kaydırma sırası bozulmaz. Arama da sayfalanır.
 - API isteği 6 saniyede, toplam katalog isteği kuyruk beklemesi dahil 20 saniyede zaman aşımına uğrar. Süresi dolan bekleyen işler kuyruktan kaldırılır, devam eden ağ çağrıları iptal edilir. Geçici 429/502/503/504 yanıtlarında bir tekrar yapılır.
 - API hataları önbelleğe alınmaz; başarısız istek boş ve başarılı katalog gibi gösterilmez.

@@ -21,7 +21,7 @@ function createHandler(service) {
     catch { return send(400, { error: 'Geçersiz adres.' }); }
     if (url.pathname === '/' || url.pathname === '/configure') return send(200, html, 'text/html; charset=utf-8', 'public, max-age=300');
     if (url.pathname === '/logo.svg' || url.pathname === '/favicon.svg') return send(200, logo, 'image/svg+xml', 'public, max-age=86400');
-    if (url.pathname === '/manifest.json') return send(200, service.manifest, undefined, 'public, max-age=0, s-maxage=300');
+    if (url.pathname === '/manifest.json') return send(200, service.manifest, undefined, 'public, max-age=0, s-maxage=60, stale-while-revalidate=300');
     const route = url.pathname.match(/^\/catalog\/(movie|series)\/([^/]+)(?:\/([^/]+))?\.json$/);
     if (!route) return send(404, { error: 'Bu sayfa bulunamadı.' });
     const [, type, rawId, rawExtras = ''] = route;
@@ -29,7 +29,7 @@ function createHandler(service) {
     for (const [key, value] of url.searchParams) extras[key] = value;
     try {
       const result = await service.catalog(type, decodeURIComponent(rawId), extras);
-      return send(200, result, undefined, 'public, max-age=60, s-maxage=900, stale-while-revalidate=1800');
+      return send(200, result, undefined, 'public, max-age=0, s-maxage=60, stale-while-revalidate=300');
     } catch {
       // Never expose credentials, upstream URLs, or transient failures as empty successes.
       return send(502, { error: 'Katalog şu anda yüklenemiyor. Biraz sonra tekrar deneyin.' });

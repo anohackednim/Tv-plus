@@ -12,13 +12,7 @@ function add(id, type, name, mode, params = {}, genres = false) {
   definitions.push({ id, type, name, mode, params, extra: [ ...(mode === 'search' ? [{ name: 'search', isRequired: true }] : []), ...(genres ? [{ name: 'genre', options: Object.keys(GENRES[type]) }] : []), { name: 'skip' } ] });
 }
 for (const [suffix, type, noun] of [['film', 'movie', 'Filmler'], ['dizi', 'series', 'Diziler']]) {
-  add(`tr-yeni-${suffix}`, type, `Yeni ${noun} · Türkiye`, 'latest', { watch_region: 'TR', with_watch_monetization_types: 'flatrate|free|ads' });
-}
-for (const [suffix, type, noun] of [['film', 'movie', 'Filmler'], ['dizi', 'series', 'Diziler']]) {
-  add(`tr-yerli-${suffix}`, type, `Türkiye'den Popüler · ${noun}`, 'discover', { with_origin_country: 'TR', sort_by: 'popularity.desc' });
-}
-for (const [suffix, type, noun] of [['film', 'movie', 'Filmler'], ['dizi', 'series', 'Diziler']]) {
-  add(`tr-trend-${suffix}`, type, `Türkiye'de Öne Çıkan · ${noun}`, 'discover', { watch_region: 'TR', with_watch_monetization_types: 'flatrate|free|ads', sort_by: 'popularity.desc' });
+  add(`tr-yeni-${suffix}`, type, `Türkiye'de Popüler · ${noun}`, 'latest', { watch_region: 'TR', with_watch_monetization_types: 'flatrate|free|ads', ...(type === 'movie' ? { region: 'TR' } : {}) });
 }
 for (const [suffix, type, noun] of [['film', 'movie', 'Filmleri'], ['dizi', 'series', 'Dizileri']]) add(`tr-turk-${suffix}`, type, `Türk ${noun}`, 'discover', { with_original_language: 'tr', sort_by: 'popularity.desc' }, true);
 add('tr-eniyi-film', 'movie', 'İyi ki İzlemişim · Sinema', 'discover', { 'vote_count.gte': 1000, 'vote_average.gte': 7.5, sort_by: 'vote_average.desc' });
@@ -42,7 +36,7 @@ add('tr-search-dizi', 'series', 'Dizi Ara', 'search');
 
 // Nuvio persists user order using addon/type/catalog IDs. A generation change
 // restores the intended discovery order after this catalog redesign.
-const published = definitions.map((def, index) => ({ ...def, id: `tvp16-${String(index + 1).padStart(2, '0')}-${def.id}` }));
+const published = definitions.map((def, index) => ({ ...def, id: `tvp17-${String(index + 1).padStart(2, '0')}-${def.id}` }));
 
 // Old installed manifests can still request these IDs after upgrading.
 const aliases = {};
@@ -53,8 +47,8 @@ aliases['tr-blutv-dizi'] = definitions.find(d => d.id === 'tr-hbomax-dizi');
 
 function createCatalogService({ apiKey, fetcher = fetch, now = () => new Date(), requestTimeoutMs = 20000 } = {}) {
   const manifest = {
-    id: 'tr.nuvio.tmdb.katalog', version: '16.0.0', name: 'TV+ Keşif',
-    description: 'Türkiye platformlarında yeni çıkanlar, popüler yerli yapımlar ve öne çıkan filmler ile diziler. Türkçe bilgiler, IMDb kimlikleri.',
+    id: 'tr.nuvio.tmdb.katalog', version: '17.0.0', name: 'TV+ Keşif',
+    description: 'Türkiye platformlarında popüler filmler ve diziler, en yeniden eskiye. Türkçe bilgiler, IMDb kimlikleri.',
     logo: 'https://tv-plus-wine.vercel.app/logo.svg', resources: ['catalog'], types: ['movie', 'series'], idPrefixes: ['tt'],
     catalogs: published.map(({ id, type, name, extra }) => ({ id, type, name, extra, pageSize: 20 })),
     behaviorHints: { adult: false, p2p: false, configurable: false }
@@ -101,7 +95,7 @@ function createCatalogService({ apiKey, fetcher = fetch, now = () => new Date(),
       const data = await response.json(); signal.throwIfAborted();
       if (data.success === false) throw new Error('TMDB returned an error');
       if (cache.size >= 3000) cache.delete(cache.keys().next().value);
-      cache.set(key, { data, until: Date.now() + (path.includes('external_ids') ? 86400000 : 1800000) });
+      cache.set(key, { data, until: Date.now() + (path.includes('external_ids') ? 86400000 : 300000) });
       return data;
     }, signal);
     pending.set(key, task);
@@ -115,10 +109,9 @@ function createCatalogService({ apiKey, fetcher = fetch, now = () => new Date(),
     if (def.mode === 'trending') path = `/trending/${tmdbType}/week`;
     if (def.mode === 'search') { path = `/search/${tmdbType}`; params.query = extras.search.trim().slice(0, 200); }
     if (def.mode === 'latest') {
-      const since = new Date(now()); since.setUTCFullYear(since.getUTCFullYear() - 1);
       Object.assign(params, tmdbType === 'movie'
-        ? { sort_by: 'primary_release_date.desc', 'primary_release_date.lte': date, 'primary_release_date.gte': since.toISOString().slice(0, 10) }
-        : { sort_by: 'first_air_date.desc', 'first_air_date.lte': date, 'first_air_date.gte': since.toISOString().slice(0, 10) });
+        ? { sort_by: 'primary_release_date.desc', 'primary_release_date.lte': date }
+        : { sort_by: 'first_air_date.desc', 'first_air_date.lte': date });
     } else if (def.mode === 'discover') params[tmdbType === 'movie' ? 'primary_release_date.lte' : 'first_air_date.lte'] = date;
     if (extras.genre && extras.genre !== 'Tümü') params.with_genres = GENRES[def.type][extras.genre];
     return { path, params, tmdbType };
@@ -146,7 +139,7 @@ function createCatalogService({ apiKey, fetcher = fetch, now = () => new Date(),
     let list = lists.get(listKey);
     if (!list || list.until < Date.now()) {
       if (lists.size >= 80) lists.delete(lists.keys().next().value);
-      list = { metas: [], seen: new Set(), page: 1, done: false, until: Date.now() + 1800000, lock: Promise.resolve() };
+      list = { metas: [], seen: new Set(), page: 1, done: false, until: Date.now() + 300000, lock: Promise.resolve() };
       lists.set(listKey, list);
     }
     // Build a stable sequence of playable IMDb entries. Missing IDs never shift offsets.
