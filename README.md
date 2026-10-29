@@ -6,12 +6,12 @@ Nuvio ve Stremio için Türkçe film / dizi kataloğu. Haftanın öne çıkanlar
 
 **Nuvio eklenti adresi:** https://tv-plus-wine.vercel.app/manifest.json
 
-Nuvio'nun Eklentiler bölümünde bu adresi ekleyin. v13'e geçerken eski TV+ Keşif eklentisini kaldırıp aynı adresle yeniden ekleyin. Nuvio'nun katalog sıralama ekranında **Eklenti sırasını takip et / Follow addons order** seçeneğini etkinleştirin. Eklenti ana kimliği korunur; raf kimlikleri bir defaya mahsus yenilenerek Nuvio'da kayıtlı eski raf sırası devre dışı kalır. Önceki katalog adresleri Crunchyroll haricinde yanıt vermeye devam eder. Sürüm numarası tek başına Nuvio'nun cihazda veya hesapta sakladığı sırayı değiştirmez.
+Nuvio'nun Eklentiler bölümünde bu adresi ekleyin. v14'e geçerken eski TV+ Keşif eklentisini kaldırıp aynı adresle yeniden ekleyin. Nuvio'nun katalog sıralama ekranında **Eklenti sırasını takip et / Follow addons order** seçeneğini etkinleştirin. Eklenti ana kimliği korunur; raf kimlikleri bir defaya mahsus yenilenerek Nuvio'da kayıtlı eski raf sırası devre dışı kalır. Önceki katalog adresleri Crunchyroll haricinde yanıt vermeye devam eder. Sürüm numarası tek başına Nuvio'nun cihazda veya hesapta sakladığı sırayı değiştirmez.
 
 ## Katalog düzeni
 
-- Bu Hafta: film ve dizi trendleri.
-- Yeni Çıkan: son bir yıl içinde yayımlanan, oy almış yapımlar; yeniden eskiye.
+- Yeni Filmler / Yeni Diziler · Türkiye: son bir yılda yayımlanan ve Türkiye'de abonelik, ücretsiz veya reklamlı olarak izlenebilen içerikler; yeniden eskiye.
+- Türkiye'de Öne Çıkan Filmler / Diziler: Türkiye'de izlenebilir içerikler; popülerliğe göre.
 - Türk Filmleri / Türk Dizileri: orijinal dili Türkçe olan yapımlar.
 - İyi ki İzlemişim / Bir Bölüm Daha: yeterli oy sayısı bulunan yüksek TMDB puanlı yapımlar.
 - Gözden Kaçan: yüksek puan ve sınırlı oy sayısıyla belirlenen keşif rafları; kişisel öneri motoru değildir.
@@ -20,7 +20,7 @@ Nuvio'nun Eklentiler bölümünde bu adresi ekleyin. v13'e geçerken eski TV+ Ke
 - Ruh Haline Göre: tür filtreleriyle film ve dizi keşfi.
 - Film Ara / Dizi Ara: Türkçe karakterleri destekleyen arama.
 
-Her raf ve filtre en fazla 200 sonuç sunan bir keşif seçkisidir; tam TMDB arşivi değildir. İstediğiniz belirli bir yapım için aramayı kullanın. Bu sınır, soğuk Vercel örneklerinde binlerce IMDb eşlemesinin yeniden hesaplanmasını önler. Bir seçki için en fazla 15 TMDB sonuç sayfası taranır.
+Raflar kaydırıldıkça sayfalanır ve TMDB'nin 500 sayfalık sınırına (en fazla yaklaşık 10.000 kaynak sonucu) kadar devam eder; son sayfa daima veri kaynağının sonudur. IMDb kimliği veya afişi olmayan içerikler atlandığı için gösterilen sonuç sayısı daha az olabilir. Çok derin bir konuma doğrudan atlamak, önceki kayıtların sırayla eşlenmesini gerektirir; en iyi deneyim normal kaydırmadır. İstediğiniz belirli bir yapım için aramayı kullanın.
 
 Türkçe özeti olmayan yapımlar için açık bir bilgilendirme gösterilir. IMDb kimliği veya afişi olmayan yapımlar listelenmez; TMDB puanı IMDb puanı olarak etiketlenmez. Platformdaki içerik ve bölge bilgisi sağlayıcının verisinin güncelliğine bağlıdır. Exxen, GAİN ve tabii için bulunabilirlik verisi sınırlı olduğundan bu raflar açıkça Orijinaller olarak adlandırılır. BluTV'nin eski adresi HBO Max rafına yönlenir.
 

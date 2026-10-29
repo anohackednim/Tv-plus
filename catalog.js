@@ -1,8 +1,8 @@
 'use strict';
 
 const IMAGE = 'https://image.tmdb.org/t/p/';
-const MAX_RESULTS = 200;
-const MAX_SOURCE_PAGES = 15;
+const MAX_RESULTS = 10000;
+const MAX_SOURCE_PAGES = 500;
 const GENRES = {
   movie: { 'Tümü': '', 'Aksiyon ve macera': '28|12', 'Bilim kurgu ve fantastik': '878|14', 'Korku ve gerilim': '27|53', 'Komedi': '35', 'Suç ve gizem': '80|9648', 'Dram': '18', 'Romantik': '10749', 'Animasyon': '16', 'Belgesel': '99', 'Aile': '10751' },
   series: { 'Tümü': '', 'Aksiyon ve macera': '10759', 'Bilim kurgu ve fantastik': '10765', 'Komedi': '35', 'Suç ve gizem': '80|9648', 'Dram': '18', 'Animasyon': '16', 'Belgesel': '99', 'Aile': '10751' }
@@ -12,9 +12,11 @@ function add(id, type, name, mode, params = {}, genres = false) {
   definitions.push({ id, type, name, mode, params, extra: [ ...(mode === 'search' ? [{ name: 'search', isRequired: true }] : []), ...(genres ? [{ name: 'genre', options: Object.keys(GENRES[type]) }] : []), { name: 'skip' } ] });
 }
 for (const [suffix, type, noun] of [['film', 'movie', 'Filmler'], ['dizi', 'series', 'Diziler']]) {
-  add(`tr-trend-${suffix}`, type, `Bu Hafta · ${noun}`, 'trending');
+  add(`tr-yeni-${suffix}`, type, `Yeni ${noun} · Türkiye`, 'latest', { watch_region: 'TR', with_watch_monetization_types: 'flatrate|free|ads' });
 }
-for (const [suffix, type, noun] of [['film', 'movie', 'Filmler'], ['dizi', 'series', 'Diziler']]) add(`tr-yeni-${suffix}`, type, `Yeni Çıkan · ${noun}`, 'latest');
+for (const [suffix, type, noun] of [['film', 'movie', 'Filmler'], ['dizi', 'series', 'Diziler']]) {
+  add(`tr-trend-${suffix}`, type, `Türkiye'de Öne Çıkan · ${noun}`, 'discover', { watch_region: 'TR', with_watch_monetization_types: 'flatrate|free|ads', sort_by: 'popularity.desc' });
+}
 for (const [suffix, type, noun] of [['film', 'movie', 'Filmleri'], ['dizi', 'series', 'Dizileri']]) add(`tr-turk-${suffix}`, type, `Türk ${noun}`, 'discover', { with_original_language: 'tr', sort_by: 'popularity.desc' }, true);
 add('tr-eniyi-film', 'movie', 'İyi ki İzlemişim · Sinema', 'discover', { 'vote_count.gte': 1000, 'vote_average.gte': 7.5, sort_by: 'vote_average.desc' });
 add('tr-eniyi-dizi', 'series', 'Bir Bölüm Daha · Diziler', 'discover', { 'vote_count.gte': 300, 'vote_average.gte': 8, sort_by: 'vote_average.desc' });
@@ -35,9 +37,9 @@ add('tr-tur-dizi', 'series', 'Ruh Haline Göre · Diziler', 'discover', { 'vote_
 add('tr-search-film', 'movie', 'Film Ara', 'search');
 add('tr-search-dizi', 'series', 'Dizi Ara', 'search');
 
-// Nuvio persists user order using addon/type/catalog IDs. A one-time generation
-// change makes its stale v11/v12 keys inapplicable, restoring manifest order.
-const published = definitions.map((def, index) => ({ ...def, id: `tvp13-${String(index + 1).padStart(2, '0')}-${def.id}` }));
+// Nuvio persists user order using addon/type/catalog IDs. A generation change
+// restores the intended discovery order after this catalog redesign.
+const published = definitions.map((def, index) => ({ ...def, id: `tvp14-${String(index + 1).padStart(2, '0')}-${def.id}` }));
 
 // Old installed manifests can still request these IDs after upgrading.
 const aliases = {};
@@ -48,8 +50,8 @@ aliases['tr-blutv-dizi'] = definitions.find(d => d.id === 'tr-hbomax-dizi');
 
 function createCatalogService({ apiKey, fetcher = fetch, now = () => new Date(), requestTimeoutMs = 20000 } = {}) {
   const manifest = {
-    id: 'tr.nuvio.tmdb.katalog', version: '13.0.0', name: 'TV+ Keşif',
-    description: 'Ne izlesem? Bu haftanın öne çıkanları, yeni filmler ve diziler, Türk yapımları ve Türkiye platform katalogları. Türkçe bilgiler, IMDb kimlikleri.',
+    id: 'tr.nuvio.tmdb.katalog', version: '14.0.0', name: 'TV+ Keşif',
+    description: 'Türkiye platformlarında yeni çıkan ve öne çıkan filmler ile diziler. Türkçe bilgiler, IMDb kimlikleri.',
     logo: 'https://tv-plus-wine.vercel.app/logo.svg', resources: ['catalog'], types: ['movie', 'series'], idPrefixes: ['tt'],
     catalogs: published.map(({ id, type, name, extra }) => ({ id, type, name, extra, pageSize: 20 })),
     behaviorHints: { adult: false, p2p: false, configurable: false }

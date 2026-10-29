@@ -16,10 +16,10 @@ function setup(options = {}) {
   return { calls, service: createCatalogService({ apiKey: 'test-key', fetcher, requestTimeoutMs: options.requestTimeoutMs || 20000, now: () => new Date('2026-10-18T12:00:00Z') }) };
 }
 
-test('keeps the installed addon identity and places discovery before platforms', () => {
+test('keeps the installed addon identity and places Turkey discovery before platforms', () => {
   const { service } = setup();
   assert.equal(service.manifest.id, 'tr.nuvio.tmdb.katalog');
-  assert.equal(service.manifest.catalogs[0].id, 'tvp13-01-tr-trend-film');
+  assert.equal(service.manifest.catalogs[0].id, 'tvp14-01-tr-yeni-film');
   assert.ok(service.manifest.catalogs.some(c => c.extra.some(e => e.name === 'genre')));
 });
 test('does not label TMDB scores as IMDb ratings', async () => {
@@ -47,9 +47,9 @@ test('local originals use verified networks rather than incomplete availability 
 test('new catalog keys bypass saved legacy ordering and remove Crunchyroll entirely', async () => {
   const { service, calls } = setup();
   const catalogs = service.manifest.catalogs;
-  const names = ['Bu Hafta · Filmler','Bu Hafta · Diziler','Yeni Çıkan · Filmler','Yeni Çıkan · Diziler','Türk Filmleri','Türk Dizileri','İyi ki İzlemişim · Sinema','Bir Bölüm Daha · Diziler','Gözden Kaçan · Filmler','Gözden Kaçan · Diziler','Netflix · Filmler','Netflix · Diziler','Prime Video · Filmler','Prime Video · Diziler','Disney+ · Filmler','Disney+ · Diziler','HBO Max · Filmler','HBO Max · Diziler','TV+ · Filmler','TV+ · Diziler','TOD · Filmler','TOD · Diziler','MUBI · Filmler','Exxen Orijinalleri','GAİN Orijinalleri','tabii Orijinalleri','puhutv','Ruh Haline Göre · Filmler','Ruh Haline Göre · Diziler','Film Ara','Dizi Ara'];
+  const names = ['Yeni Filmler · Türkiye','Yeni Diziler · Türkiye',"Türkiye'de Öne Çıkan · Filmler","Türkiye'de Öne Çıkan · Diziler",'Türk Filmleri','Türk Dizileri','İyi ki İzlemişim · Sinema','Bir Bölüm Daha · Diziler','Gözden Kaçan · Filmler','Gözden Kaçan · Diziler','Netflix · Filmler','Netflix · Diziler','Prime Video · Filmler','Prime Video · Diziler','Disney+ · Filmler','Disney+ · Diziler','HBO Max · Filmler','HBO Max · Diziler','TV+ · Filmler','TV+ · Diziler','TOD · Filmler','TOD · Diziler','MUBI · Filmler','Exxen Orijinalleri','GAİN Orijinalleri','tabii Orijinalleri','puhutv','Ruh Haline Göre · Filmler','Ruh Haline Göre · Diziler','Film Ara','Dizi Ara'];
   assert.deepEqual(catalogs.map(c => c.name), names);
-  assert.ok(catalogs.every(c => c.id.startsWith('tvp13-')));
+  assert.ok(catalogs.every(c => c.id.startsWith('tvp14-')));
   const savedOldOrder = ['tr-netflix-film', 'tr-turk-dizi', 'tr-crunchy-dizi'];
   assert.ok(catalogs.every(c => !savedOldOrder.includes(c.id)));
   assert.deepEqual(await service.catalog('series', 'tr-crunchy-dizi', {}), { metas: [] });
@@ -135,5 +135,7 @@ test('the last discovery page remains bounded on a fresh service', async () => {
   assert.equal(result.metas.length, 20);
   assert.equal(result.metas[0].id, 'tt0000181');
   assert.ok(calls.length <= 220);
-  assert.deepEqual(await service.catalog('movie', 'tr-yeni-film', { skip: '200' }), { metas: [] });
+  const next = await service.catalog('movie', 'tr-yeni-film', { skip: '200' });
+  assert.equal(next.metas.length, 20);
+  assert.equal(next.metas[0].id, 'tt0000201');
 });
